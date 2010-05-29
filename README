@@ -1,0 +1,18 @@
+GroupableAttributes
+===================
+
+This plugin for Rails provides a method for grouping attributes.
+
+
+Example
+=======
+
+class Comment < ActiveRecord::Base
+  attribute_collection :restricted, [:name, :email]
+end
+
+comment = Comment.new(:name => "Paul", :email => "paul@paul.com", :content => "blub")
+comment.restricted  #=> { :name => "Paul", :email => "paul@paul.com" }
+
+
+Copyright (c) 2010 Julian Jabs, released under the MIT license
