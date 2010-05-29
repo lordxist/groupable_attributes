@@ -18,8 +18,8 @@ module ActiveRecord
       #     attribute_collection :restricted, [:name, :email]
       #   end
       #
-      #   comment = Comment.new(:name => "Paul", :email => "paul@paul.com", :content => "blub")
-      #   comment.restricted  #=> { :name => "Paul", :email => "paul@paul.com" }
+      #   comment = Comment.new(:name => "Paul", :email => "paul@example.com", :content => "blub")
+      #   comment.restricted  #=> { :name => "Paul", :email => "paul@example.com" }
       #
       def attribute_collection(name, attribute_names)
         name = name.to_sym

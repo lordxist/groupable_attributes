@@ -130,8 +130,8 @@ Use this method to group together some of your model&#8216;s attributes.
     attribute_collection :restricted, [:name, :email]
   end
 
-  comment = Comment.new(:name =&gt; &quot;Paul&quot;, :email =&gt; &quot;paul@paul.com&quot;, :content =&gt; &quot;blub&quot;)
-  comment.restricted  #=&gt; { :name =&gt; &quot;Paul&quot;, :email =&gt; &quot;paul@paul.com&quot; }
+  comment = Comment.new(:name =&gt; &quot;Paul&quot;, :email =&gt; &quot;paul@example.com&quot;, :content =&gt; &quot;blub&quot;)
+  comment.restricted  #=&gt; { :name =&gt; &quot;Paul&quot;, :email =&gt; &quot;paul@example.com&quot; }
 </pre>
           <p><a class="source-toggle" href="#"
             onclick="toggleCode('M000002-source');return false;">[Source]</a></p>
