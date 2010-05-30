@@ -4,8 +4,10 @@ GroupableAttributes
 This plugin for Rails provides a method for grouping attributes.
 
 
-Example
-=======
+Collections
+===========
+
+A collection can be created with "attribute_collection":
 
 class Comment < ActiveRecord::Base
   attribute_collection :restricted, [:name, :email]
@@ -13,6 +15,16 @@ end
 
 comment = Comment.new(:name => "Paul", :email => "paul@example.com", :content => "blub")
 comment.restricted  #=> { :name => "Paul", :email => "paul@example.com" }
+
+Selection
+=========
+
+In case you only need the fields from some collection in your "find" result,
+you can use the "select_collection" wrapper for the "select" option:
+
+Comment.create(:name => "Paul", :email => "paul@example.com", :content => "blub")
+comment = Comment.first(:select_collection => :restricted)
+comment.attributes #=> { "name" => "Paul", "email" => "paul@example.com" }
 
 
 Copyright (c) 2010 Julian Jabs, released under the MIT license
