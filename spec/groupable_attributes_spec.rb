@@ -6,7 +6,7 @@ end
 
 describe ActiveRecord::Base, "#attribute_collection" do
   it "should collect the given attributes and none else" do
-    restricted = {:name => "Paul", :email => "paul@paul.com"}
+    restricted = {:name => "Paul", :email => "paul@example.com"}
     params = restricted.merge(:content => "blub")
     assert GroupableAttributesTestModel.new(params).restricted == restricted
   end
