@@ -25,6 +25,8 @@ module ActiveRecord
     #   comment = Comment.first(:select_collection => :restricted)
     #   comment.attributes #=> { "name" => "Paul", "email" => "paul@example.com" }
     #
+    # This will raise an exception if the collection doesn't exist.
+    #
     module ClassMethods
       # Use this method to group together some of your model's attributes.
       # 
@@ -60,6 +62,7 @@ module ActiveRecord
       private
       def find_with_collection_selection(*args)
         options = args.extract_options!
+        raise "No attribute collection named #{options[:select_collection]}" unless attribute_collections[options[:select_collection]]
         attribute_collections[options[:select_collection]].each do |attribute_name|
           unless options[:select]
             options[:select] = attribute_name.to_s
