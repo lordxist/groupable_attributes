@@ -122,10 +122,15 @@
             onclick="toggleCode('M000001-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000001-source">
 <pre>
-   <span class="ruby-comment cmt"># File lib/active_record/groupable_attributes.rb, line 3</span>
-3:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">included</span>(<span class="ruby-identifier">base</span>)
-4:       <span class="ruby-identifier">base</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">ClassMethods</span>)
-5:     <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/active_record/groupable_attributes.rb, line 3</span>
+ 3:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">included</span>(<span class="ruby-identifier">base</span>)
+ 4:       <span class="ruby-identifier">base</span>.<span class="ruby-identifier">extend</span>(<span class="ruby-constant">ClassMethods</span>)
+ 5:       <span class="ruby-identifier">base</span>.<span class="ruby-identifier">class_eval</span> <span class="ruby-keyword kw">do</span>
+ 6:         <span class="ruby-keyword kw">class</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-keyword kw">self</span>
+ 7:           <span class="ruby-identifier">alias_method_chain</span> <span class="ruby-identifier">:find</span>, <span class="ruby-identifier">:collection_selection</span>
+ 8:         <span class="ruby-keyword kw">end</span>
+ 9:       <span class="ruby-keyword kw">end</span>
+10:     <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>

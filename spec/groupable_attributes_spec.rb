@@ -11,3 +11,12 @@ describe ActiveRecord::Base, "#attribute_collection" do
     assert GroupableAttributesTestModel.new(params).restricted == restricted
   end
 end
+
+describe ActiveRecord::Base, "#find" do
+  it "should select the attributes collected" do
+    restricted = {"name" => "Paul", "email" => "paul@example.com"}
+    params = restricted.merge(:content => "blub")
+    GroupableAttributesTestModel.create(params)
+    assert GroupableAttributesTestModel.first(:select_collection => :restricted).attributes == restricted
+  end
+end

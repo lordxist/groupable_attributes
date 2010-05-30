@@ -72,6 +72,29 @@
 
   <div id="contextContent">
 
+    <div id="description">
+      <p>
+Useful for grouping together some of your model&#8216;s attributes.
+</p>
+<pre>
+  class Comment &lt; ActiveRecord::Base
+    attribute_collection :restricted, [:name, :email]
+  end
+
+  comment = Comment.new(:name =&gt; &quot;Paul&quot;, :email =&gt; &quot;paul@example.com&quot;, :content =&gt; &quot;blub&quot;)
+  comment.restricted  #=&gt; { :name =&gt; &quot;Paul&quot;, :email =&gt; &quot;paul@example.com&quot; }
+</pre>
+<p>
+You can also select only a given collection using the find option
+:select_collection. This is a wrapper for :select.
+</p>
+<pre>
+  Comment.create(:name =&gt; &quot;Paul&quot;, :email =&gt; &quot;paul@example.com&quot;, :content =&gt; &quot;blub&quot;)
+  comment = Comment.first(:select_collection =&gt; :restricted)
+  comment.attributes #=&gt; { &quot;name&quot; =&gt; &quot;Paul&quot;, &quot;email&quot; =&gt; &quot;paul@example.com&quot; }
+</pre>
+
+    </div>
 
 
    </div>
@@ -81,6 +104,7 @@
 
       <div class="name-list">
       <a href="#M000002">attribute_collection</a>&nbsp;&nbsp;
+      <a href="#M000003">attribute_collections</a>&nbsp;&nbsp;
       </div>
     </div>
 
@@ -124,37 +148,53 @@ Use this method to group together some of your model&#8216;s attributes.
 
 </li>
 </ul>
-<h4>Examples</h4>
-<pre>
-  class Comment &lt; ActiveRecord::Base
-    attribute_collection :restricted, [:name, :email]
-  end
-
-  comment = Comment.new(:name =&gt; &quot;Paul&quot;, :email =&gt; &quot;paul@example.com&quot;, :content =&gt; &quot;blub&quot;)
-  comment.restricted  #=&gt; { :name =&gt; &quot;Paul&quot;, :email =&gt; &quot;paul@example.com&quot; }
-</pre>
           <p><a class="source-toggle" href="#"
             onclick="toggleCode('M000002-source');return false;">[Source]</a></p>
           <div class="method-source-code" id="M000002-source">
 <pre>
-    <span class="ruby-comment cmt"># File lib/active_record/groupable_attributes.rb, line 24</span>
-24:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">attribute_collection</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">attribute_names</span>)
-25:         <span class="ruby-identifier">name</span> = <span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_sym</span>
-26: 
-27:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">name</span>, <span class="ruby-keyword kw">true</span>)
-28:           <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;Creating attribute collection :#{name}. &quot;</span> \
-29:                       <span class="ruby-node">&quot;Overwriting existing method #{self.name}.#{name}.&quot;</span>
-30:         <span class="ruby-keyword kw">end</span>
-31: 
-32:         <span class="ruby-identifier">define_method</span> <span class="ruby-identifier">name</span> <span class="ruby-keyword kw">do</span>
-33:           <span class="ruby-identifier">collection</span> = {}
-34:           <span class="ruby-identifier">attribute_names</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">attribute_name</span><span class="ruby-operator">|</span>
-35:             <span class="ruby-identifier">attribute_name</span> = <span class="ruby-identifier">attribute_name</span>.<span class="ruby-identifier">to_sym</span>
-36:             <span class="ruby-identifier">collection</span>[<span class="ruby-identifier">attribute_name</span>] = <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">attribute_name</span>]
-37:           <span class="ruby-keyword kw">end</span>
-38:           <span class="ruby-identifier">collection</span>
-39:         <span class="ruby-keyword kw">end</span>
-40:       <span class="ruby-keyword kw">end</span>
+    <span class="ruby-comment cmt"># File lib/active_record/groupable_attributes.rb, line 36</span>
+36:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">attribute_collection</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">attribute_names</span>)
+37:         <span class="ruby-identifier">name</span> = <span class="ruby-identifier">name</span>.<span class="ruby-identifier">to_sym</span>
+38: 
+39:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">name</span>, <span class="ruby-keyword kw">true</span>)
+40:           <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">warn</span> <span class="ruby-node">&quot;Creating attribute collection :#{name}. &quot;</span> \
+41:                       <span class="ruby-node">&quot;Overwriting existing method #{self.name}.#{name}.&quot;</span>
+42:         <span class="ruby-keyword kw">end</span>
+43: 
+44:         <span class="ruby-identifier">attribute_collections</span>[<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">attribute_names</span>
+45: 
+46:         <span class="ruby-identifier">define_method</span> <span class="ruby-identifier">name</span> <span class="ruby-keyword kw">do</span>
+47:           <span class="ruby-identifier">collection</span> = {}
+48:           <span class="ruby-identifier">attribute_names</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">attribute_name</span><span class="ruby-operator">|</span>
+49:             <span class="ruby-identifier">attribute_name</span> = <span class="ruby-identifier">attribute_name</span>.<span class="ruby-identifier">to_sym</span>
+50:             <span class="ruby-identifier">collection</span>[<span class="ruby-identifier">attribute_name</span>] = <span class="ruby-keyword kw">self</span>[<span class="ruby-identifier">attribute_name</span>]
+51:           <span class="ruby-keyword kw">end</span>
+52:           <span class="ruby-identifier">collection</span>
+53:         <span class="ruby-keyword kw">end</span>
+54:       <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000003" class="method-detail">
+        <a name="M000003"></a>
+
+        <div class="method-heading">
+          <a href="#M000003" class="method-signature">
+          <span class="method-name">attribute_collections</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000003-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000003-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/active_record/groupable_attributes.rb, line 56</span>
+56:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">attribute_collections</span>
+57:         <span class="ruby-identifier">read_inheritable_attribute</span>(<span class="ruby-identifier">:attribute_collections</span>) <span class="ruby-operator">||</span> <span class="ruby-identifier">write_inheritable_attribute</span>(<span class="ruby-identifier">:attribute_collections</span>, {})
+58:       <span class="ruby-keyword kw">end</span>
 </pre>
           </div>
         </div>
