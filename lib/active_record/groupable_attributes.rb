@@ -62,15 +62,17 @@ module ActiveRecord
       private
       def find_with_collection_selection(*args)
         options = args.extract_options!
-        raise "No attribute collection named #{options[:select_collection]}" unless attribute_collections[options[:select_collection]]
-        attribute_collections[options[:select_collection]].each do |attribute_name|
-          unless options[:select]
-            options[:select] = attribute_name.to_s
-          else
-            options[:select] += ", " + attribute_name.to_s
+        if options[:select_collection]
+          raise "No attribute collection named #{options[:select_collection]}" unless attribute_collections[options[:select_collection]]
+          attribute_collections[options[:select_collection]].each do |attribute_name|
+            unless options[:select]
+              options[:select] = attribute_name.to_s
+            else
+              options[:select] += ", " + attribute_name.to_s
+            end
           end
+          options.delete(:select_collection)
         end
-        options.delete(:select_collection)
         args << options
 
         find_without_collection_selection(*args)
